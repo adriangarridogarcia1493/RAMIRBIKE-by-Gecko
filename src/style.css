@@ -1,0 +1,42 @@
+body { margin: 0; background: #1a1a1a; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Arial Black', sans-serif; overflow: hidden; }
+#game-container { position: relative; width: 400px; height: 90vh; overflow: hidden; border: 4px solid #333; transition: background 0.5s; }
+
+
+/* NIVELES */
+.level-city { background: #2ecc71; }
+.level-city #road { background: #34495e; border-left: 5px dashed #fff; border-right: 5px dashed #fff; }
+
+
+.level-school { background: #e67e22; }
+.level-school #road { background: #bdc3c7; border-left: 5px solid #c0392b; border-right: 5px solid #c0392b; }
+
+
+.level-beach { background: #f1c40f; }
+.level-beach #road { background: #f3e5ab; border-left: 5px solid #3498db; border-right: 5px solid #3498db; }
+
+
+#road { position: absolute; width: 300px; height: 100%; left: 50px; }
+#line-container { position: absolute; width: 8px; height: 200%; left: 50%; transform: translateX(-50%); background: repeating-linear-gradient(to bottom, #fff, #fff 40px, transparent 40px, transparent 80px); animation: moveLines 0.5s linear infinite; }
+@keyframes moveLines { from { top: -80px; } to { top: 0; } }
+
+
+#player { position: absolute; bottom: 80px; left: 125px; font-size: 50px; z-index: 10; transition: left 0.1s ease-out; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3)); }
+
+
+.obj { position: absolute; font-size: 35px; z-index: 5; transition: transform 0.1s; }
+.overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); color: white; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+
+.shop { display: flex; gap: 5px; margin: 15px 0; flex-wrap: wrap; justify-content: center; }
+.item { background: #333; padding: 10px; border: 2px solid #555; cursor: pointer; border-radius: 8px; font-size: 14px; }
+.btn-start { padding: 12px 25px; margin: 5px; background: #2ecc71; border: none; color: white; font-weight: bold; cursor: pointer; border-radius: 5px; width: 200px; }
+
+
+#ui { position: absolute; top: 10px; width: 100%; text-align: center; z-index: 50; }
+#energy-container, #special-bar-container { width: 150px; height: 10px; background: #333; margin: 5px auto; border-radius: 5px; border: 1px solid #fff; overflow: hidden; }
+#energy-bar { width: 100%; height: 100%; background: #2ecc71; transition: width 0.3s; }
+#special-bar { width: 0%; height: 100%; background: #3498db; transition: width 0.3s; }
+/* ... (mismo CSS anterior) ... */
+.level-forest { background: #1b4d3e; }
+.level-forest #road { background: #3d2b1f; border-left: 5px solid #2ecc71; border-right: 5px solid #2ecc71; }
+#status-effects { color: #f1c40f; font-size: 12px; font-weight: bold; margin-top: 5px; }
