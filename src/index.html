@@ -1,61 +1,137 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
- <meta charset="UTF-8">
- <title>Ramirbike by Gecko</title>
- <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Ramirbike by Gecko</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
  <div id="game-container">
    
-     <!-- 1. INTRO -->
      <div id="intro-screen" class="overlay-full">
          <h1 class="main-title">RAMIRBIKE</h1>
          <p class="subtitle">by Gecko</p>
          <button class="btn-start" onclick="showModeSelection()">INICIAR</button>
      </div>
 
-
-     <!-- 2. SELECCIÓN DE MODO -->
      <div id="mode-selection" class="overlay" style="display:none;">
          <h2>ELIGE TU CAMINO</h2>
          <button class="btn-mode" onclick="showLevelMenu()">MODO NIVELES 🚩</button>
          <button class="btn-mode" onclick="showInfiniteMenu()">MODO INFINITO ♾️</button>
+         <button class="btn-mode" onclick="showShopMenu()" style="background:#f1c40f; color:#000;">TIENDA & RULETA 💰</button>
+         <button class="btn-mode" onclick="showMinigamesMenu()" style="background:#9b59b6;">MINIJUEGOS 🎮</button>
          <button class="btn-info-corner" onclick="toggleInstructions()">❓</button>
      </div>
 
-
-     <!-- 3. MENÚ NIVELES -->
      <div id="levels-menu" class="overlay" style="display:none;">
          <button class="btn-back" onclick="showModeSelection()">⬅ VOLVER</button>
          <h2 id="current-world-title">CIUDAD 🏙️</h2>
+         <div id="levels-navigation" style="margin-bottom: 10px;">
+             <button class="btn-world" style="width:70px; padding:5px;" onclick="changeWorldMenu(-1)">◀</button>
+             <button class="btn-world" style="width:70px; padding:5px;" onclick="changeWorldMenu(1)">▶</button>
+         </div>
          <div id="levels-grid" class="levels-grid"></div>
      </div>
 
-
-     <!-- 4. MENÚ INFINITO (GARAJE) -->
      <div id="infinite-menu" class="overlay" style="display:none;">
          <button class="btn-back" onclick="showModeSelection()">⬅ VOLVER</button>
-         <h2>GARAJE & RÉCORDS</h2>
+         <h2>MODO INFINITO</h2>
          <div id="records-display" class="records-box">
              <p>🦎 TOP RÉCORDS 🚲</p>
              <div id="best-scores"></div>
          </div>
-         <div id="money-display">💰 <span id="total-money">0</span></div>
-         <div class="shop" id="bike-shop"></div>
-         <div class="world-btns">
+         <div class="world-btns" style="max-height: 240px; overflow-y: auto; width:100%; display:flex; flex-direction:column; align-items:center;">
              <button class="btn-world" onclick="startInfinite('city')">🏙️ CIUDAD</button>
              <button class="btn-world" onclick="startInfinite('school')">🏫 INSTI</button>
              <button class="btn-world" onclick="startInfinite('beach')">🏖️ PLAYA</button>
              <button class="btn-world" onclick="startInfinite('forest')" style="background:#27ae60;">🌲 BOSQUE</button>
+             <button class="btn-world" onclick="startInfinite('circuit')" style="background:#7f8c8d;">🏎️ CIRCUITO</button>
+             <button class="btn-world" onclick="startInfinite('volcano')" style="background:#d35400;">🔥 VOLCÁN</button>
          </div>
      </div>
 
+     <div id="shop-menu" class="overlay" style="display:none;">
+         <button class="btn-back" onclick="showModeSelection()">⬅ VOLVER</button>
+         <h2>LA GECKO-TIENDA</h2>
+         <div id="money-display">💰 <span id="total-money">0</span></div>
+         <div class="shop" id="bike-shop"></div>
+         <hr style="width:100%; border:1px solid #444; margin:10px 0;">
+         <h3>RULETA DE LA SUERTE</h3>
+         <div class="wheel-shop-btns">
+             <button class="btn-world" style="background:#34495e;" onclick="buyWheelSpin('normal')">🔮 Normal (1 💰)</button>
+             <button class="btn-world" style="background:#d35400;" onclick="buyWheelSpin('premium')">💎 Premium (100 💰)</button>
+         </div>
+     </div>
 
-     <!-- RULETA / PREMIOS -->
+     <div id="minigames-menu" class="overlay" style="display:none;">
+         <button class="btn-back" onclick="showModeSelection()">⬅ VOLVER</button>
+         <h2>MINIJUEGOS 🎮</h2>
+         
+         <div class="minigame-card">
+             <h3>⚽ Pachanguitamiro</h3>
+             <p class="minigame-desc">Fútbol estilo Pong fluido. Elige tu equipo, estadio y balón. ¡Muévete únicamente con las flechas del teclado y llega a 3 goles!</p>
+             <button class="btn-start" style="width:100%;" onclick="openPachanguitaSetup()">JUGAR</button>
+         </div>
+         
+         <div class="minigame-card">
+             <h3>🦎 Gecko Snake</h3>
+             <p class="minigame-desc">Guía al Gecko. Come bicis, kebabs y osos con las flechas de dirección.</p>
+             <div id="snake-record-ui" style="font-size:12px; color:#f1c40f; margin-bottom:5px;">Récord: 0s</div>
+             <button class="btn-start" style="width:100%; background:#2ecc71;" onclick="startSnakeMinigame()">JUGAR</button>
+         </div>
+         
+         <div class="minigame-card">
+             <h3>🦅 Flappy Gecko</h3>
+             <p class="minigame-desc">Vuela esquivando los pilares pulsando ESPACIO. ¡Presume de tu estela imperial de España por donde pases!</p>
+             <button class="btn-start" style="width:100%; background:#e74c3c;" onclick="startFlappyMinigame()">JUGAR</button>
+         </div>
+     </div>
+
+     <div id="pachanguita-setup" class="overlay" style="display:none;">
+         <button class="btn-back" onclick="showMinigamesMenu()">⬅ VOLVER</button>
+         <h3>CONFIGURAR PARTIDO</h3>
+         
+         <label>Equipo:</label>
+         <select id="pacha-team"></select>
+         
+         <label>Balón:</label>
+         <select id="pacha-ball">
+             <option value="⚽">⚽ Clásico</option>
+             <option value="🏀">🏀 Baloncesto</option>
+             <option value="🏈">🏈 Melón</option>
+             <option value="🎱">🎱 Billar</option>
+         </select>
+         
+         <label>Estadio:</label>
+         <select id="pacha-stadium"></select>
+         
+         <button class="btn-start" style="margin-top:15px;" onclick="startPachanguitaGame()">¡AL CAMPO!</button>
+     </div>
+
+     <div id="pachanguita-screen" class="overlay" style="display:none; background:#1e1e1e; padding:0;">
+         <div id="pacha-scoreboard">0 - 0</div>
+         <div id="pacha-field">
+             <div id="pacha-paddle-user">🦎</div>
+             <div id="pacha-paddle-cpu">🤖</div>
+             <div id="pacha-ball-obj">⚽</div>
+         </div>
+         <div id="pacha-announcement" class="pacha-pop"></div>
+     </div>
+
+     <div id="snake-screen" class="overlay" style="display:none; background:#111;">
+         <div id="snake-ui">⏱️ <span id="snake-timer">00:00</span></div>
+         <div id="snake-canvas-container"></div>
+     </div>
+
+     <div id="flappy-screen" class="overlay" style="display:none; background:#3498db; overflow:hidden; padding:0;">
+         <div id="flappy-score">0</div>
+         <div id="flappy-bird">🦎</div>
+         <div id="flappy-obstacle-container"></div>
+     </div>
+
      <div id="reward-screen" class="overlay" style="display:none;">
-         <h2 style="color:#f1c40f">¡MAPA COMPLETADO!</h2>
-         <p id="congrats-msg">"Bon Treball! En nada podrás arreglarme mis 11 bicis!!! Vivan los geckos"</p>
+         <h2 id="wheel-title" style="color:#f1c40f">¡MAPA COMPLETADO!</h2>
+         <p id="congrats-msg">"Bon Treball! En nada podrás arreglarme mis 11 bicis!!!"</p>
          <div id="wheel-container">
              <div id="wheel">🎡</div>
          </div>
@@ -64,43 +140,69 @@
          <button id="claim-btn" class="btn-start" style="display:none;" onclick="closeRewards()">CONTINUAR</button>
      </div>
 
-
-     <!-- INSTRUCCIONES -->
      <div id="instructions-screen" class="overlay" style="display:none;">
          <h3>GUÍA DEL GECKO 🦎</h3>
-         <div class="inst-content">
-             <p>⬅️/➡️ Moverte | ⌨️ ESPACIO: Tiempo Bala</p>
+         <div class="inst-content" style="max-height: 65vh; overflow-y: auto; text-align: left; font-size:13px; padding-right:5px;">
+             <p><b>🕹️ Controles:</b> ⬅️ / ➡️ Mover lateralmente | ⌨️ ESPACIO: Tiempo Bala (Ralentiza el mapa consumiendo la barra azul una vez cargada).</p>
              <hr>
-             <p>✅ <b>Buenos:</b> 🥙 (+Vida), 🧲 (Atrae), ⏩ (Corre!), 💰 (Pasta)</p>
-             <p>❌ <b>Malos:</b> 🏗️, 🐂, 🚗, 🇲🇦 (-1 pasta)</p>
-             <p>💡 <i>Consejo: No comas mucho kebab o explotarás... es broma, come muchos.</i></p>
+             <p>編 <b>Objetos y Potenciadores:</b></p>
+             <ul>
+                 <li>🥙 <b>Kebab de Energía:</b> Recupera +30% de la barra de hambre. ¡Esencial para no desmayarte!</li>
+                 <li>🧲 <b>Imán:</b> Atrae automáticamente todas las monedas y sacos hacia ti durante unos segundos.</li>
+                 <li>⏩ <b>Turbo:</b> Te da un chute brutal de velocidad temporal para avanzar metros más rápido.</li>
+                 <li>🪙 <b>Moneda:</b> Suman +1 a tus ahorros para la tienda.</li>
+                 <li>💰 <b>Saco de Pasta:</b> Una señora bolsa de dinero que te da +10 monedas de golpe.</li>
+                 <li>💚 <b>Corazón Verde (Escudo):</b> Te otorga una vida extra. Si chocas contra un obstáculo letal, se romperá pero seguirás vivo.</li>
+                 <li>🇪🇸 <b>Bandera de España:</b> Efecto Estrella Imperial. Te vuelve completamente inmune a todo y te da súper velocidad durante 10 segundos.</li>
+                 <li>❤️ <b>Corazón Rojo:</b> Desata la furia del Gecko Devorador. Durante 10 segundos limpiará toda la pantalla absorbiendo los obstáculos.</li>
+                 <li>🇲🇦 <b>Bandera de Marruecos:</b> ¡Cuidado! Si la tocas te robará 1 moneda de tus ahorros (a menos que seas inmune).</li>
+             </ul>
+             <hr>
+             <p>❌ <b>Obstáculos fatales / Pérdidas:</b></p>
+             <ul>
+                 <li>🇲🇦 Robo (-1 dinero).</li>
+                 <li><b>Todos los mapas:</b> 🏗️, 🚲, 🦎, 🐻, 🎱, ⛲, 🐂</li>
+                 <li>🏙️ Ciudad: 🚗, 🚧, 🐀</li>
+                 <li>🏫 Insti: 📝, 📚, 👨‍🏫</li>
+                 <li>🏖️ Playa: 🦈, 🦀, ⛱️</li>
+                 <li>🌲 Bosque: 🌲, 🍄, 🐺</li>
+                 <li>🏎️ Circuito: 🏎️, 🏍️, ✊🏼, 🤙🏼</li>
+                 <li>🔥 Volcán: 🔥</li>
+             </ul>
+             <hr>
+             <p>🎮 <b>Guía de Minijuegos:</b></p>
+             <p><b>Pachanguitamiro:</b> Mueve tu pala con las flechas ⬅️ / ➡️. ¡Primer equipo a 3 goles gana!</p>
+             <p><b>Gecko Snake:</b> Dirígete usando las flechas del teclado. Come para crecer. ¡No toques las colisiones de tu cuerpo ni paredes!</p>
+             <p><b>Flappy Gecko:</b> Presiona ESPACIO rítmicamente para mantener el vuelo y esquivar columnas.</p>
+             <hr>
+             <h4 style="margin: 5px 0; color: #f1c40f;">💡 CONSEJOS IMPERIALES DEL TALLER:</h4>
+             <p style="margin: 4px 0; font-style: italic;">• 💡 No comas mucho kebab o explotarás... es broma, come muchos.</p>
+             <p style="margin: 4px 0; font-style: italic;">• 💡 Si Ramir te pregunta por sus 11 bicis, tú dile que el Gecko las está tuneando en el circuito.</p>
+             <p style="margin: 4px 0; font-style: italic;">• 💡 Si ves un oso furioso en la carretera, no intentes jugarte un billar con él, suele salir mal.</p>
+             <p style="margin: 4px 0; font-style: italic;">• 💡 En Pachanguitamiro la IA no tiene piedad, pero tampoco sabe lo que es un buen kebab, úsalo a tu favor.</p>
          </div>
-         <button class="btn-info" onclick="toggleInstructions()">VALE!</button>
+         <button class="btn-info" onclick="toggleInstructions()" style="margin-top: 10px;">¡ENTENDIDO!</button>
      </div>
 
-
-     <!-- JUEGO -->
      <div id="road">
          <div id="line-container"></div>
          <div id="player">🚲</div>
          <div id="level-progress-ui" style="display:none;">META: <span id="dist-needed">0</span>m</div>
      </div>
 
-
      <div id="ui">
-         <div id="stats"><span id="score">0m</span> | 💰 <span id="session-money">0</span></div>
+         <div id="stats"><span id="score">0m</span> | 💰 <span id="session-money">0</span> <span id="shield-indicator" style="display:none;">💚</span></div>
          <div id="energy-container"><div id="energy-bar"></div></div>
          <div id="special-bar-container"><div id="special-bar"></div></div>
+         <div id="buff-timers-container"></div>
      </div>
 
-
      <div id="status-log"></div>
-
 
      <div id="game-over" class="overlay" style="display:none;">
          <h2 id="death-msg">¿Tienes pensado entregarla?</h2>
          <button class="btn-start" onclick="resetGame()">REINTENTAR</button>
-         <button class="btn-info" onclick="location.reload()">MENÚ PRINCIPAL</button>
+         <button class="btn-info" onclick="exitToMenu()">MENÚ PRINCIPAL</button>
      </div>
  </div>
  <script src="script.js"></script>
